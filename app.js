@@ -7,7 +7,7 @@ const mongoose = require('mongoose');
 const session = require('express-session');
 const passport = require('passport');
 const passportLocalMongoose = require('passport-local-mongoose');
-const jwt = require("jsonwebtoken");
+const path = require('path');
 
 app = express();
 app.set('view engine', 'ejs');
@@ -233,7 +233,6 @@ app.get("/isloggedin", function (req, res){
   return res.send({loggedIn: true});
 });
 
-const path = require('path');
 // Handles any requests that don't match the ones above
 app.get('*', (req,res) =>{
     if (process.env.PRODUCTION){
