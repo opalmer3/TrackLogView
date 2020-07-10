@@ -14,10 +14,10 @@ app.set('view engine', 'ejs');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
-if (process.env.PRODUCTION){
+if (process.env.NODE_ENV === 'production'){
   app.use(express.static(path.join(__dirname, 'client/build')));
 } else {
-  app.use(express.static("public"));
+  app.use(express.static(path.join(__dirname, 'client/src')));
 }
 
 app.use(session({
@@ -235,7 +235,7 @@ app.get("/isloggedin", function (req, res){
 
 // Handles any requests that don't match the ones above
 app.get('*', (req,res) =>{
-    if (process.env.PRODUCTION){
+    if (process.env.NODE_ENV === 'production'){
       res.sendFile(path.join(__dirname+'/client/build/index.html'));
     } else {
         res.sendFile(path.join(__dirname+'/client/public/index.html'));
