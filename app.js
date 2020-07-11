@@ -5,6 +5,7 @@ const ejs = require('ejs');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const session = require('express-session');
+const MongoStore = require('connect-mongo')(session);
 const passport = require('passport');
 const passportLocalMongoose = require('passport-local-mongoose');
 const path = require('path');
@@ -16,14 +17,15 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 if (process.env.NODE_ENV === 'production'){
   app.use(express.static(path.join(__dirname, 'client/build')));
-} else {
-  app.use(express.static(path.join(__dirname, 'client/src')));
 }
 
 app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
-  saveUninitialized: false
+  saveUninitialized: false,
+  store: new MongoStore({
+        url: 'mongodb+srv://admin-opalmer:K72x29kT@cluster0-15uka.mongodb.net/tracklogviewDB?retryWrites=true&w=majority',
+    })
 }));
 
 app.use(function(req, res, next) {
@@ -140,9 +142,7 @@ app.post("/login", function(req, res, next){
     if (!user) { return res.send({success: false, error: info.message}); }
     req.logIn(user, function(err) {
       if (err) { return res.send({success: false, error: err}); }
-      // Create JWT
-      const token = jwt.sign({id: user._id}, process.env.JWT_SECRET, {expiresIn: '30d'});
-      return res.json({success: true, token: token});
+      return res.json({success: true});
     });
   })(req, res, next);
 });
