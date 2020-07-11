@@ -1,0 +1,464 @@
+body{
+  position: relative;
+  padding-bottom: 50px;
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  color: #2b2e4a;
+  background-color: #eee;
+  background-image: url("https://www.transparenttextures.com/patterns/cubes.png");
+/* This is mostly intended for prototyping; please download the pattern and re-host for production environments. Thank you! */
+}
+
+nav{
+  background-color: #2b2e4a;
+  color: #eee;
+  display: flex;
+  padding: 15px 5%;
+}
+
+select{
+    padding: 5px;
+    border-radius: 5px;
+}
+
+/* LOAD SCREEN */
+.load-screen{
+  min-height: calc(100vh - 55px);
+  width: 100%;
+  position: absolute;
+  top: 55px;
+  display: flex;
+  background-color: #eee;
+  z-index: 2;
+}
+
+.sessions > .load-screen, .compare-container > .load-screen{
+  min-height: 0;
+}
+
+/* TRANSITIONS */
+.page{
+  position: absolute;
+  top:55px;
+  left:0;
+  right:0;
+}
+
+.fade-enter{
+  opacity: 0;
+}
+.fade-enter-active{
+  opacity: 1;
+  transition: opacity 400ms linear 400ms;
+}
+.fade-exit{
+  opacity: 1;
+}
+.fade-exit-active{
+  opacity: 0;
+  transition: opacity 400ms linear;
+}
+
+.slide-down-enter{
+  max-height:0 ;
+}
+.slide-down-enter-active{
+  max-height:300px ;
+  transition: max-height 500ms linear;
+}
+.slide-down-exit{
+  max-height: 300px;
+}
+.slide-down-exit-active{
+  max-height: 0;
+  transition: max-height 500ms linear;
+}
+
+/* HEADER STYLES */
+
+.nav-right, .nav-left{
+  margin: auto 0;
+}
+
+.nav-left{
+  font-size: 1.3rem;
+  flex: 0 0 50px;
+}
+
+.nav-right{
+  text-align: right;
+  font-size: 0.8rem;
+  flex: 1;
+}
+
+.nav-right a{
+  margin: 0 5px;
+}
+
+nav a{
+  color: inherit;
+  text-decoration: none;
+}
+nav a:hover{
+  color: #dbdbdb;
+}
+.nav-link{
+  text-transform: uppercase;
+}
+
+/* LOGIN / REGISTER STYLES */
+.login-container{
+  display: flex;
+  width: 100%;
+  min-height: calc(100vh - 55px);
+}
+
+.login-box{
+  margin: auto;
+  padding: 20px;
+  border-radius: 5px;
+  border: 1px solid #2b2e4a;
+}
+
+.login-box *{
+  display: block;
+  margin: 20px auto;
+}
+
+.login-box input{
+  width: 200px;
+  padding: 5px;
+  font-size: 1rem;
+  background-color: #eee;
+  border: none;
+  border-bottom: 1px solid #e84545;
+  text-align: center;
+}
+
+.login-box input:focus{
+  outline: none;
+  border-bottom: 2px solid #e84545;
+}
+
+::placeholder{
+  text-align: center;
+}
+.login-button, .register-button{
+    width: 100%;
+      padding: 10px 5px;
+      border-radius: 5px;
+}
+.login-box a{
+  text-decoration: none;
+}
+.login-button{
+  border: 1px solid #2b2e4a;
+  color: #2b2e4a;
+  margin-top: 20px;
+}
+
+.register-button{
+  border: 1px solid #e84545;
+  color: #e84545;
+}
+
+.login-box button:hover{
+  cursor: pointer;
+}
+
+.user-img{
+  height: 60px;
+}
+
+.error-msg{
+  font-size: 0.8rem;
+  text-align: center;
+  color: #e84545;
+}
+
+.lds-dual-ring {
+  width: 15px;
+  height: 15px;
+  margin: auto;
+}
+.lds-dual-ring:after {
+  content: " ";
+  display: block;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  border: 1.5px solid #2b2e4a;
+  border-color: #2b2e4a transparent #2b2e4a transparent;
+  animation: lds-dual-ring 1.2s linear infinite;
+}
+.log-button .lds-dual-ring:after{
+  border-color: #eee transparent #eee transparent;
+}
+@keyframes lds-dual-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* INDEX STYLES */
+.top-banner{
+    background: rgb(43,46,74);
+    background: linear-gradient(180deg, rgba(43,46,74,1) 0%, rgba(238,238,238,1) 100%);
+    color: white;
+    padding: 50px 5px;
+    text-align: center;
+}
+
+.top-banner h1{
+  margin: 0;
+}
+
+.sessions{
+  position: relative;
+  padding-bottom: 50px;
+  max-width: 1200px;
+    margin: 0 auto;
+    
+}
+
+.no-sessions{
+  background-color: transparent;
+  text-align: center;
+}
+.no-sessions a{
+  text-decoration: none;;
+}
+
+.month{
+  margin: 20px;
+}
+
+.month-title{
+background: rgb(232,69,69);
+    background: linear-gradient(90deg, rgba(232,69,69,1) 0%, rgba(43,46,74,1) 100%);
+    border-radius: 5px;
+    color: #eee;
+    font-weight: 400;
+    text-align: center;
+    padding: 5px 0;
+}
+
+.table-headers{
+  display: none;
+}
+.header{
+  flex: 1;
+  padding: 10px;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.session-info{
+  border-bottom: 1px solid #2b2e4a;
+  padding: 10px 0;
+  text-align: center;
+}
+
+.month div:last-child{
+  border-bottom: none;
+}
+.month h3{
+  margin: 0;
+}
+
+.session-item{
+  padding: 5px 0;
+}
+
+.edit-delete-buttons{
+  padding: 5px 0;
+  border-radius: 5px;
+
+}
+.edit, .delete, .submit, .cancel, .compare-button, .add, .remove, .log-button{
+  padding: 5px 10px;
+  margin: 0 5px;
+  border-radius: 5px;
+}
+.edit, .cancel, .compare-button, .add{
+  border: 1px solid #2b2e4a;
+  color: #2b2e4a;
+}
+.delete, .submit, .remove{
+  border: 1px solid #e84545;
+  color: #e84545;
+}
+
+.session-form input, .session-form textarea{
+  display: block;
+  border-radius: 5px;
+  margin: 10px auto;
+  text-align: center;
+  font-family: inherit;
+  color: inherit;
+  padding: 5px;
+font-size: 1rem;
+}
+.session-form textarea{
+  width: 260px;
+  height: 100px;
+}
+
+.submit-cancel-buttons{
+  text-align: center;
+  flex: 1;
+}
+.confirmation-window{
+  position: fixed;
+  display: flex;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+}
+.confirmation-box{
+margin: auto;
+text-align: center;
+background-color: #eee;
+color: #2b2e4a;
+padding: 20px;
+}
+.confirmation-box h3{
+  font-weight: 300;
+  margin: 0 0 10px 0;
+}
+
+/* Compare styles */
+.compare-container{
+  position: relative;
+}
+.compare-form-container{
+  text-align: center;
+}
+
+.compare-button{
+  display: block;
+  margin: 10px auto;
+  cursor: pointer;
+}
+
+/* Log styles */
+.log-container{
+  text-align: center;
+  margin: 0 20px;
+  padding: 15px 5%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.log-button{
+  background-color: #2b2e4a;
+  color: #eee;
+  border: 1px solid #2b2e4a;
+}
+
+
+.add-remove-buttons{
+  margin: 10px 0;
+}
+
+/* RESPONSIVE STYLES */
+@media (min-width: 568px) {
+  .page{
+    top:68px;
+  }
+
+  .login-container{
+    min-height: calc(100vh - 68px);
+  }
+
+  .load-screen{
+    min-height: calc(100vh - 68px);
+    top: 68px;
+  }
+
+  select, button{
+    font-size: 1rem;
+  }
+  #word-1::after{
+    content: "rack"
+  }
+  #word-2::after{
+    content: "og"
+  }
+  #word-3::after{
+    content: "iew"
+  }
+  .nav-left{
+    font-size: 2rem;
+  }
+  .nav-right{
+    font-size: 1.3rem;
+    font-weight: 300;
+  }
+  .top-banner h1{
+    font-size: 2.5rem;
+  }
+  .top-banner p{
+    font-size: 1.2rem;
+  }
+
+  textarea{
+    width: 60%;
+  }
+
+}
+
+@media (min-width: 768px) {
+  .table-headers{
+    display: flex;
+  }
+  .session-info{
+    display: flex;
+  }
+  .session-item{
+    flex: 1;
+  }
+  .edit-delete-buttons{
+    flex: 1;
+  }
+  .login-box input{
+    width: 300px;
+  }
+
+  .session-form{
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+    overflow: hidden;
+  }
+  .session-form > *{
+    align-self: center;
+  }
+  .session-form input[type="date"]{
+    height: 35px;
+    flex: 1;
+  }
+  .session-form textarea{
+    width: 200px;
+    height: 100px;
+    margin: 10px;
+    flex: 1;
+  }
+  .submit-cancel-buttons{
+    flex-basis: 100%;
+  }
+}
+
+@media (min-width: 900px) {
+  .compare-sessions{
+    display: flex;
+  }
+  
+  .compare-month{
+    flex: 1;
+  }
+
+}

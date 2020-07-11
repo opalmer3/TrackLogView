@@ -24,7 +24,7 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   store: new MongoStore({
-        url: 'mongodb+srv://admin-opalmer:K72x29kT@cluster0-15uka.mongodb.net/tracklogviewDB?retryWrites=true&w=majority',
+        url: process.env.MONGO_URI
     })
 }));
 
@@ -37,7 +37,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 mongoose.set('useCreateIndex', true);
-mongoose.connect("mongodb+srv://admin-opalmer:K72x29kT@cluster0-15uka.mongodb.net/tracklogviewDB?retryWrites=true&w=majority", {useNewUrlParser: true, useUnifiedTopology: true});
+mongoose.connect(process.env.MONGO_URI, {useNewUrlParser: true, useUnifiedTopology: true});
 
 const sessionSchema = new mongoose.Schema({
   date: Date,
@@ -75,7 +75,7 @@ passport.deserializeUser(function(id, done) {
 });
 
 ////////////// INDEX AND EDIT / DELETE TRAINING SESSION AJAX HANDLERS ///////////////////////
-app.get("/home", function(req, res){
+app.get("/api/home", function(req, res){
   User.findById(req.user._id, function(err, user){
     if (err) { return res.send({message: 'Could not retrieve sessions from database'}); }
     // Sort sessions by decending date order
@@ -87,7 +87,7 @@ app.get("/home", function(req, res){
 
 });
 
-app.delete("/deleteSession", function(req, res){
+app.delete("/api/deleteSession", function(req, res){
   User.findById(req.user._id, function(err, user){
     if (err) { return res.send({success: false, message: err}); }
     user.sessions.splice(user.sessions.map(session =>{ return session._id; }).indexOf(req.body.id), 1);
@@ -96,7 +96,7 @@ app.delete("/deleteSession", function(req, res){
   });
 });
 
-app.patch("/editSession", function(req, res){
+app.patch("/api/editSession", function(req, res){
   const {id, date, session, times, comments} = req.body;
   User.findById(req.user._id, function(err, user){
     if (err) { return res.send({success: false, message: err}); }
@@ -112,11 +112,11 @@ app.patch("/editSession", function(req, res){
 });
 /////////////////////////////////////////////////////////////////////////////////////////////
 ///////// REGISTER LOG IN LOG OUT /////////////
-app.get("/register", function(req, res){
+app.get("/api/register", function(req, res){
   res.render('register');
 });
 
-app.post("/register", function(req, res){
+app.post("/api/register", function(req, res){
     const {fName, lName, username, email, password, passwordConfirmation } = req.body;
     // if any fields are blank then re render page with message
     for( const key in req.body){
@@ -136,7 +136,7 @@ app.post("/register", function(req, res){
     });
 });
 
-app.post("/login", function(req, res, next){
+app.post("/api/login", function(req, res, next){
   passport.authenticate('local', function(err, user, info) {
     if (err) { return res.send({success: false, error: err}); }
     if (!user) { return res.send({success: false, error: info.message}); }
@@ -147,14 +147,14 @@ app.post("/login", function(req, res, next){
   })(req, res, next);
 });
 
-app.get("/logout", function(req, res){
+app.get("/api/logout", function(req, res){
   req.logout();
   res.send({success: true});
 });
 
 ////////////////////////////////////////////////////////////
 //////////////// LOG COMPARE //////////////////////////////
-app.post("/log", function(req, res){
+app.post("/api/log", function(req, res){
   // convert inputs from object to list
   const inputs = Object.keys(req.body).map(key =>{ return req.body[key]; });
   // Get number of form rows, 1 row has 4 fields
@@ -176,7 +176,7 @@ app.post("/log", function(req, res){
   res.send({success:true});
 });
 
-app.get("/compare", function(req,res){
+app.get("/api/compare", function(req,res){
   // Retrive list of months/years for which sessions are logged to pass to the form on the page
   User.findById(req.user._id, function(err, user){
     if (err) { return res.send({message: 'Error retrieving sessions, try again'}); }
@@ -188,7 +188,7 @@ app.get("/compare", function(req,res){
   });
 });
 
-app.post("/compare", function(req,res){
+app.post("/api/compare", function(req,res){
   // Retrive list of months/years for which sessions are logged to pass to the form on the page
   User.findById(req.user._id, function(err, user){
     if (err) { return res.send({message: 'Error retrieving sessions, try again'}); }
@@ -228,18 +228,14 @@ function getMonths(sessions){
     return monthsList;
 }
 ///////////// LOGGED IN CHECK ////////////////////
-app.get("/isloggedin", function (req, res){
+app.get("/api/isloggedin", function (req, res){
   if (!req.isAuthenticated()) return res.send({loggedIn: false});
   return res.send({loggedIn: true});
 });
 
 // Handles any requests that don't match the ones above
 app.get('*', (req,res) =>{
-    if (process.env.NODE_ENV === 'production'){
       res.sendFile(path.join(__dirname+'/client/build/index.html'));
-    } else {
-        res.sendFile(path.join(__dirname+'/client/public/index.html'));
-    }
 });
 
 
