@@ -155,22 +155,17 @@ app.get("/api/logout", function(req, res){
 ////////////////////////////////////////////////////////////
 //////////////// LOG COMPARE //////////////////////////////
 app.post("/api/log", function(req, res){
-  // convert inputs from object to list
-  const inputs = Object.keys(req.body).map(key =>{ return req.body[key]; });
-  // Get number of form rows, 1 row has 4 fields
-  const numRows = inputs.length / 4;
+  // Get sessions from the request
+  const sessions = req.body.inputs;
+  // Get the user's information
   User.findOne({_id: req.user._id}, function(err, user){
     if (err) { return res.send({message: 'Error, please try again'}); }
-    // iterate through number of rows in form and add session to sessions list
-    for(var i = 0; i < numRows; i++){
-      if (i === 0){
-        let newSession = new Session({date: new Date(inputs[0]), session: inputs[1], times: inputs[2], comments: inputs[3]});
-        user.sessions.push(newSession);
-      } else {
-        let newSession = new Session({date: new Date(inputs[-1 + ((i + 1) * 2 + ((i * 2 -1)))]), session: inputs[0 + ((i + 1) * 2 + ((i * 2 -1)))], times: inputs[1 + ((i + 1) * 2 + ((i * 2 -1)))], comments: inputs[2 + ((i + 1) * 2 + ((i * 2 -1)))]});
-        user.sessions.push(newSession);
-      }
-  }
+    // add each session to user's sessions list
+    sessions.forEach(session=>{
+      const date = session.date.split("/").join("-");
+      const newSession = new Session({date: new Date(date), session: session.session, times: session.times, comments: session.comments});
+      user.sessions.push(newSession);
+    });
   user.save();
   });
   res.send({success:true});

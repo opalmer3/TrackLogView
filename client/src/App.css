@@ -4,7 +4,7 @@ body{
   font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
   color: #2b2e4a;
   background-color: #eee;
-  background-image: url("https://www.transparenttextures.com/patterns/cubes.png");
+  background-image: url("/images/cubes.png");
 /* This is mostly intended for prototyping; please download the pattern and re-host for production environments. Thank you! */
 }
 
@@ -188,7 +188,14 @@ nav a:hover{
   border-radius: 50%;
   border: 1.5px solid #2b2e4a;
   border-color: #2b2e4a transparent #2b2e4a transparent;
-  animation: lds-dual-ring 1.2s linear infinite;
+  animation: lds-dual-ring;
+  animation-duration: 1.2s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  -webkit-animation: lds-dual-ring;
+  -webkit-animation-duration: 1.2s;
+  -webkit-animation-timing-function: linear;
+  -webkit-animation-iteration-count: infinite;
 }
 .log-button .lds-dual-ring:after{
   border-color: #eee transparent #eee transparent;
@@ -201,6 +208,16 @@ nav a:hover{
     transform: rotate(360deg);
   }
 }
+
+  @-webkit-keyframes lds-dual-ring {
+    0% {
+      -webkit-transform: rotate(0deg);
+    }
+    100% {
+      -webkit-transform: rotate(360deg);
+    }
+}
+
 
 /* INDEX STYLES */
 .top-banner{

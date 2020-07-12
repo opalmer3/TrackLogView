@@ -5,7 +5,7 @@ import Axios from 'axios';
 
 function LogForm(){
     const [rowCount, setRowCount] = useState(1);
-    const [formInputs, setFormInputs] = useState({date0: '', session0: '', times0: '', comments0: ''});
+    const [formInputs, setFormInputs] = useState([{date: '', session: '', times: '', comments: ''}]);
     const [missingFormInputs, setMissingFormInputs] = useState([]);
     const [submitted, setSubmitted] = useState(false);
     const fieldNames = ['date', 'session', 'times', 'comments'];
@@ -14,27 +14,30 @@ function LogForm(){
 
     function handleChange(event){
         const {name, value} = event.target;
-            setFormInputs(prevValues=>{
-                return {
-                    ...prevValues,
-                    [name]: value
+        const rowNum = name.slice(-1);
+        const fieldName= name.slice(0, -1);
+
+        setFormInputs(prevValues=>{
+                prevValues[rowNum] = {
+                    ...prevValues[rowNum],
+                    [fieldName]: value
                 }
-            });       
+                return [...prevValues];
+        });       
     }
 
     function handleAddRow(){
+        if (rowCount >= 10) return;
+
         setRowCount(prevCount=>{
             return prevCount + 1;
         });
-        // update form inputs state with the new fields added
+        // update form inputs state appending a new object to the array
         setFormInputs(prevValues=>{
-            const newValues = {};
-            const newFieldNames= fieldNames.map(field=>{ return field + rowCount.toString(); });
-            newFieldNames.forEach(field=>{ newValues[field] = ''; });
-            return {
+            return [
                 ...prevValues,
-                ...newValues
-            }
+                {date: '', session: '', times: '', comments: ''}
+            ]
         });
     }
     function handleRemoveRow(){
@@ -42,12 +45,12 @@ function LogForm(){
             setRowCount(prevCount=>{
                 return prevCount - 1;
             });
-            // update form inputs state removing the fields removed
+            // pop the last object off the form inputs array
             setFormInputs(prevValues=>{
-                fieldNames.forEach(field=>{ delete prevValues[field + (rowCount -1).toString()]; });
-                return {
+                prevValues.pop();
+                return [
                     ...prevValues,
-                }
+                ]
             });
             
         }
@@ -68,12 +71,16 @@ function LogForm(){
         setSubmitted(true);
         // Check all neccessary fields have been filled
         let blankFields = [];
-        Array(rowCount).fill(0).forEach((n, index)=>{
+
+        formInputs.forEach((n, index)=>{
+            
             fieldNames.forEach(field=>{ 
-                // if field is blank add it to blank fields array
-                if ( formInputs[field + index.toString()].trim() === '' && field !== 'comments'){
+                // if date is invalid or session or time field is blank add it to blank fields array
+                if ( formInputs[index][field].trim() === '' && field !== 'comments' && field !=='date'){
                      blankFields.push(field + index.toString()); 
-                }
+                } else if (field === 'date' && (new Date(n.date).toString() === 'Invalid Date' || n.date.trim().length !== 10)){
+                    blankFields.push(field + index.toString());
+                } 
         });
     });
         // Set state of missing form inputs
@@ -94,7 +101,7 @@ function LogForm(){
                 url:'/api/log',
                 method: 'POST',
                 data: {
-                    ...formInputs
+                    inputs: formInputs
                     }
                 });
             if (response.data.success){

@@ -22,6 +22,7 @@ function FormRow(props){
                                 onFocus={props.removeMissing}
                                 value={props.formInputs[date]} 
                                 type="date"
+                                placeholder="yyyy/mm/dd"
                                 name={"date" + props.rowNumber} 
                                 style={props.missingFormInputs.indexOf('date' + props.rowNumber.toString()) !== -1 ? blankFieldStyling : {}}
                                 />
