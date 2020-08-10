@@ -1,36 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import Axios from 'axios';
-import Loading from './components/Loading.jsx';
-import TopBanner from './components/general/TopBanner.jsx';
-import Month from './components/sessions/Month.jsx'
+import Loading from '../../components/general/Loading.jsx';
+import TopBanner from '../../components/general/TopBanner.jsx';
+import Month from '../../components/index/Month.jsx'
 import { NavLink } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { get_sessions } from '../../store/sessions/actions.js';
 
 function Index(){
-    const [sessions, setSessions] = useState([]);
-    const [months, setMonths] = useState([]);
-    const [errorMsg, setErrorMsg] = useState('');
-    const [loading, setLoading] = useState(true);
+    // Get relevant state from redux store
+    const {sessions, months, errorMsg, apiLoading} = useSelector(state => state.get_sessions);
+    const dispatch = useDispatch();
     // Used in use effect so infinite loop not invoked
     const [reRender, setReRender] = useState(false);
 
     useEffect(()=>{
-        async function getSessions(){
-            try{
-                let response = await Axios.get("/api/home");
-                if (response.data.success === true){
-                    setSessions(response.data.sessions);
-                    setMonths(response.data.months); 
-                    setLoading(false);
-                } else {
-                    setErrorMsg(response.data.message);
-                }
-                
-            } catch(e){
-                console.log(e);
-            } 
-        }
-        getSessions();
-    }, [reRender]);
+        dispatch(get_sessions());
+    }, [dispatch, reRender]);
 
 
     function callReRender(){
@@ -46,7 +31,7 @@ function Index(){
             </div>
 
             <div className="sessions">
-            {loading ? <Loading />
+            {apiLoading ? <Loading />
             :
             <>
                 {months.length !== 0 ? months.map((month, index)=>{

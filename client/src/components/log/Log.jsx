@@ -1,6 +1,6 @@
 import React from 'react';
-import TopBanner from './components/general/TopBanner';
-import LogForm from './components/log/LogForm.jsx';
+import TopBanner from '../general/TopBanner';
+import LogForm from './LogForm.jsx';
 
 function Log(){
     return <div className='page'>

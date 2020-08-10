@@ -1,6 +1,6 @@
 import React from 'react';
-import RegisterForm from './components/registerlogin/RegisterForm.jsx'
-import clipboard from '../images/clipboard.svg'
+import RegisterForm from './RegisterForm.jsx'
+import clipboard from './images/clipboard.svg'
 
 function Register(){
 
